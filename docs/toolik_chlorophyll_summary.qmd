@@ -1,0 +1,58 @@
+---
+title: "Toolik Lake Chlorophyll"
+format: html
+editor: visual
+execute:
+    echo: true
+    warning: false
+---
+
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(here)
+library(skimr)
+```
+
+yaml is space sensitive so indent by two spaces. to set or overrride global options can do in yaml, for individual code chunks use hashpipe
+
+##Read in data
+```{r}
+
+toolik_chlorophyll <- read_csv(here::here("data","data-raw","toolik_chlorophyll.csv"),
+                               na = c("."))%>% 
+  clean_names()
+
+##read_csv has argument to specify missing data, give it a vector of data
+```
+
+```{r}
+skimr::skim(toolik_chlorophyll)
+
+#now 0 missing data after adding na specification to read_csv
+```
+
+##Now make a graph of chlorophyll concentration
+```{r}
+
+chlorophyll_pprod_graph <- ggplot(data = toolik_chlorophyll,
+                                  aes(x = active_chl_a_ug_l,
+                                      y = pprod_mg_available_c_m3_d)) +
+  geom_point()
+
+```
+```{r}
+chlorophyll_pprod_graph
+```
+Now can export this graph as a jpg
+
+```{r}
+
+ggsave(plot = chlorophyll_pprod_graph,
+       here("figs", "chlorophyll_pprod_graph.pdf"),
+       width = 8,
+       height = 8,
+       dpi = 200)
+```
+
