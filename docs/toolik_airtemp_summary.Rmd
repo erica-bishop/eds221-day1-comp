@@ -29,7 +29,6 @@ view(toolik_weather)
 ##note that some columns have "#N/A" which R will read as a character, others are left blank which R does recognize as NA
 ```
 
-
 -   Second: What is that warning? `problems()` - line 6424
 
 -   How does R assign classes to data it reads in? See: <https://readr.tidyverse.org/articles/readr.html>
@@ -54,12 +53,21 @@ names(toolik_weather)
 I don't want to deal with those capital letters. These aren't even bad looking column names, but let's clean them up a bit.
 
 ```{r}
-toolik_weather <- toolik_weather %>% clean_names() # What does this do? Say it in words.
+toolik_weather <- toolik_weather %>% clean_names() 
 
-# What is this %>% thing? Meet the pipe operator! Also, as of a couple months ago, |> is a native pipe operator (versus %>%, which comes along with the tidyverse)
+```
+
+command + shift + m shortcut for tidyverse pipe
+
+What does this do? Say it in words: store a new object called the same as toolik_weather, overwritting existing object
+
+clean names takes column names and converts them into a more coder-friendly case
+# pipe %>% or |> does the same thing - makes the sequence/order of code feel more intuitive, can write code in order that things feel like they should happen in (instead of nested functions, which can be tough to follow) - makes order like object first and THEN... pipe is sequential, says take the output and then do the next function and so on... NOT the same as the plus, which creates layers in gg plot
+
+What is this %>% thing? Meet the pipe operator! Also, as of a couple months ago, |> is a native pipe operator (versus %>%, which comes along with the tidyverse)
 
 # Now what are the column names?
-```
+now they are all in lower snake case
 
 ```{r}
 names(toolik_weather)
@@ -71,7 +79,7 @@ Let's make a jitterplot of temperatures by month.
 
 ```{r}
 toolik_temp_plot <- ggplot(data = toolik_weather, aes(x = as.factor(month), y = daily_air_temp_mean_c)) +
-  geom_jitter(aes(color = daily_air_temp_mean_c), show.legend = FALSE) +
+  geom_jitter(aes(color = daily_air_temp_mean_c), show.legend = FALSE, size = 0.5) +
   scale_color_gradient(low = "blue", high = "orange") +
   theme_minimal() +
   labs(title = "Toolik Station daily air temperature",
@@ -85,6 +93,7 @@ toolik_temp_plot
 
 ```{r}
 ggsave(here::here("figs", "toolik_temp_plot.png"), height = 6, width = 7)
+##gg save pulls last created graph from document unless otherwsie specified with plot = 
 ```
 
 Now try changing something about the ggplot code, and re-run your `ggsave()` line above. Does your saved figure change? Great!
